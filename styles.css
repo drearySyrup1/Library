@@ -81,7 +81,7 @@ body {
     display: grid;
     gap: 20px;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-}
+}   
 
 .card p, .card h4 {
     margin: 0;
@@ -154,4 +154,33 @@ input {
     grid-template-columns: 1fr 1fr;
     gap: 10px;
     align-items: center;
+}
+
+@keyframes fadein {
+ from { opacity: 0; }
+ to { opacity: 1; }   
+}
+
+@keyframes fadeout {
+ from { opacity: 1; }
+ to { opacity: 0; }   
+}
+
+.fadein {
+    animation-name: fadein;
+    animation-duration: .3s;
+}
+
+.fadeout {
+    animation-name: fadeout;
+    animation-duration: .3s;
+}
+
+.error-msg {
+    background-color: hsl(0, 70%, 65%);
+    border-radius: 10px;
+    padding: .5rem;
+    text-align: center;
+    color: white;
+    transition: all .5s;
 }

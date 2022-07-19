@@ -18,11 +18,25 @@ closeModal.addEventListener('click', hideModal);
 
 function showModal() {
     overlayModal.classList.remove('hide');
+    overlayModal.classList.add('fadein')
 }
 
 function hideModal() {
-    overlayModal.classList.add('hide');
+    overlayModal.classList.add('fadeout')
 }
+
+overlayModal.addEventListener('animationend', e => {
+    switch (e.animationName) {
+        case 'fadein':
+            overlayModal.classList.remove('fadein');            
+            break;
+        
+        case 'fadeout':
+            overlayModal.classList.remove('fadeout');
+            overlayModal.classList.add('hide')
+            break;
+    }
+})
 
 function resetForm() {
     document.getElementById('title').value = ''
@@ -117,13 +131,29 @@ function render(books, display) {
 
         card.append(deleteButtonDiv)
 
-        display.append(card);
+        display.prepend(card);
     })
 }
 
 function editMode(index, card) {
     card.innerHTML = '';
 
+
+        const errorMsg = document.createElement('p');
+        errorMsg.classList.add('error-msg');
+        errorMsg.style.display = 'none';
+        card.append(errorMsg);
+
+
+        function displayError(msg) {
+            function hide() {
+                errorMsg.style.display = 'none';
+            }
+            errorMsg.style.display = 'block';
+
+            errorMsg.innerText = msg;
+            setTimeout(hide, 1500);
+        }
 
         const title = document.createElement('input');
         title.value = myLibrary[index].title;
@@ -146,6 +176,15 @@ function editMode(index, card) {
 
         editButton.addEventListener('click',
         () => {
+            if (
+                title.value === '' ||
+                author.value === '' ||
+                pages.value === '' 
+                ) {
+                displayError('Fill all fields');
+                return
+            }
+
             myLibrary[index].title = title.value;
             myLibrary[index].author = author.value;
             myLibrary[index].pages = pages.value;
@@ -163,18 +202,30 @@ function editMode(index, card) {
 
 }
 
-function addBookToLibrary() {
+function addBookToLibrary(e) {
     const title = document.getElementById('title').value;
     const author = document.getElementById('author').value;
     const pages = document.getElementById('pages').value;
     const readStatus = document.getElementById('read-modal').checked;
 
+    const form = document.querySelector('#overlay form')
+    form.noValidate = false;
+    const inputs = document.querySelectorAll('#overlay input:not(input[type="checkbox"]');
+
+    let canContinue = true;
+
+    inputs.forEach(input => {
+        if (input.value === '') canContinue = false;
+    })
+
+    if (!canContinue) return;
+
     const book = new Book(title, author, pages, readStatus);
     myLibrary.push(book);
 
-    resetForm();
-
     hideModal();
+    form.setAttribute('novalidate', 'novalidate');
+    resetForm();
 
     render(myLibrary, bookDisplay);
 }
