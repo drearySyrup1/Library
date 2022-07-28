@@ -1,3 +1,13 @@
+class Book {
+    constructor(title, author, pages, readStatus) {
+        this.title = title;
+        this.author = author;
+        this.pages = pages;
+        this.readStatus = readStatus;
+    }
+}
+
+
 const myLibrary = [
     new Book('Cool Title','Someone', '33', false),
     new Book('Cool Title','Someone', '43', true),
@@ -43,13 +53,6 @@ function resetForm() {
     document.getElementById('author').value = ''
     document.getElementById('pages').value = ''
     document.getElementById('read-modal').checked = false;
-}
-
-function Book(title, author, pages, readStatus) {
-    this.title = title;
-    this.author = author;
-    this.pages = pages;
-    this.readStatus = readStatus;
 }
 
 function render(books, display) {
